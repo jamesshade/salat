@@ -1,4 +1,6 @@
 /*
+ * Forked from:
+ *
  * Copyright (c) 2010 - 2013 Novus Partners, Inc. (http://www.novus.com)
  *
  * Module:        salat-build
@@ -69,10 +71,10 @@ object BuildSettings {
   import Repos._
 
   val buildOrganization = "com.novus"
-  val buildVersion = "1.9.2-SNAPSHOT"
+  val buildVersion = "1.9.2.JS-SNAPSHOT"
   val buildScalaVersion = "2.10.0"
 
-  val buildSettings = Defaults.defaultSettings ++ Format.settings ++ Publish.settings ++ Ls.settings ++ net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Seq(
+  val buildSettings = Defaults.defaultSettings ++ Format.settings ++ /*Publish.settings ++*/ Ls.settings ++ net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Seq(
     organization := buildOrganization,
     version := buildVersion,
     scalaVersion := buildScalaVersion,
@@ -115,34 +117,34 @@ object Format {
   }
 }
 
-object Publish {
-  lazy val settings = Seq(
-    publishMavenStyle := true,
-    publishTo <<= version { (v: String) =>
-      val nexus = "https://oss.sonatype.org/"
-      if (v.trim.endsWith("SNAPSHOT"))
-        Some("snapshots" at nexus + "content/repositories/snapshots")
-      else
-        Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-    },
-    publishArtifact in Test := false,
-    pomIncludeRepository := { _ => false },
-    licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-    homepage := Some(url("https://github.com/novus/salat")),
-    pomExtra := (
-      <scm>
-        <url>git://github.com/novus/salat.git</url>
-        <connection>scm:git://github.com/novus/salat.git</connection>
-      </scm>
-      <developers>
-        <developer>
-          <id>rktoomey</id>
-          <name>Rose Toomey</name>
-          <url>http://github.com/rktoomey</url>
-        </developer>
-      </developers>)
-  )
-}
+//object Publish {
+//  lazy val settings = Seq(
+//    publishMavenStyle := true,
+//    publishTo <<= version { (v: String) =>
+//      val nexus = "https://oss.sonatype.org/"
+//      if (v.trim.endsWith("SNAPSHOT"))
+//        Some("snapshots" at nexus + "content/repositories/snapshots")
+//      else
+//        Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+//    },
+//    publishArtifact in Test := false,
+//    pomIncludeRepository := { _ => false },
+//    licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+//    homepage := Some(url("https://github.com/novus/salat")),
+//    pomExtra := (
+//      <scm>
+//        <url>git://github.com/novus/salat.git</url>
+//        <connection>scm:git://github.com/novus/salat.git</connection>
+//      </scm>
+//      <developers>
+//        <developer>
+//          <id>rktoomey</id>
+//          <name>Rose Toomey</name>
+//          <url>http://github.com/rktoomey</url>
+//        </developer>
+//      </developers>)
+//  )
+//}
 
 object Dependencies {
 

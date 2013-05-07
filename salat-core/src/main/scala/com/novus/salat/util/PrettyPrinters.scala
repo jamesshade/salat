@@ -1,4 +1,6 @@
 /*
+ * Forked from:
+ *
  * Copyright (c) 2010 - 2012 Novus Partners, Inc. (http://www.novus.com)
  *
  * Module:        salat-core
@@ -25,7 +27,7 @@
 package com.novus.salat.util
 
 import scala.tools.scalap.scalax.rules.scalasig.TypeRefType
-import java.lang.reflect.{ ParameterizedType, Type }
+import java.lang.reflect.{ Constructor, Method, ParameterizedType, Type }
 import com.novus.salat.{ DefaultArg, ConcreteGrater, Field => SField }
 import scala.reflect.{ Manifest, ClassManifest }
 
@@ -88,11 +90,15 @@ object ConstructorPrettyPrinter extends GraterPrettyPrinter {
     val defaultArgs = g.betterDefaults
 
     val builder = List.newBuilder[String]
-    builder += "CONSTRUCTOR\n"
-    builder += constructor.toGenericString
+
+    builder += constructor.description
+    builder += constructor.genericString
+
+    val genericParameterTypes = constructor.genericParameterTypes
+
     var arity = 0
     val p = "PARAM\t[%d]\nNAME\t%s\nTYPE\t%s\nDEFAULT ARG\t%s\n@Ignore\t%s\n"
-    for (param <- constructor.getGenericParameterTypes) {
+    for (param <- genericParameterTypes) {
       val field = getField(indexedFields, arity)
       builder += p.format(arity,
         fieldName(field),
@@ -113,8 +119,12 @@ object ConstructorInputPrettyPrinter extends GraterPrettyPrinter with Logging {
     val defaultArgs = g.betterDefaults
 
     val builder = List.newBuilder[String]
-    builder += "CONSTRUCTOR"
-    builder += constructor.toGenericString
+
+    builder += constructor.description
+    builder += constructor.genericString
+
+    val genericParameterTypes = constructor.genericParameterTypes
+
     val p = """
 ---------- CONSTRUCTOR EXPECTS FOR PARAM [%d] --------------
 NAME:         %s
@@ -126,7 +136,7 @@ DEFAULT ARG   %s
 ------------------------------------------------------------
     """
     var arity = 0
-    for (param <- constructor.getGenericParameterTypes) {
+    for (param <- genericParameterTypes) {
       val field = getField(indexedFields, arity)
       val arg = if (args.isDefinedAt(arity)) Option(args(arity)) else None
       builder += p.format(arity,

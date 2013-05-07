@@ -1,4 +1,6 @@
 /*
+ * Forked from:
+ *
  * Copyright (c) 2010 - 2012 Novus Partners, Inc. (http://www.novus.com)
  *
  * Module:        salat-core
@@ -286,8 +288,9 @@ abstract class ConcreteGrater[X <: CaseClass](clazz: Class[X])(implicit ctx: Con
   }
 
   private def feedArgsToConstructor(args: Seq[AnyRef]): X = {
+
     try {
-      ca.constructor.newInstance(args: _*)
+      ca.constructor.invoke(args)
     }
     catch {
       // when something bad happens feeding args into constructor, catch these exceptions and

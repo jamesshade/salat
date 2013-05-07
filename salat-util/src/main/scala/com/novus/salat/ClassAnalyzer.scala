@@ -1,4 +1,6 @@
 /*
+ * Forked from:
+ *
  * Copyright (c) 2010 - 2012 Novus Partners, Inc. (http://www.novus.com)
  *
  * Module:        salat-util
@@ -29,7 +31,7 @@ import com.novus.salat.util._
 import scala.tools.scalap.scalax.rules.scalasig._
 import com.novus.salat.annotations.raw._
 import com.novus.salat.annotations.util._
-import java.lang.reflect.{ Constructor, Method }
+import java.lang.reflect.{ TypeVariable, GenericDeclaration, Constructor, Method }
 import scala.tools.scalap.scalax.rules.scalasig.TypeRefType
 import scala.tools.scalap.scalax.rules.scalasig.MethodSymbol
 import com.novus.salat.util.MissingExpectedType
@@ -136,7 +138,16 @@ case class ClassAnalyzer[A](clazz: Class[A],
   val sym = findSym(clazz, classLoaders)
   lazy val companionClass = ClassAnalyzer.companionClass(clazz, classLoaders)
   lazy val companionObject = ClassAnalyzer.companionObject(clazz, classLoaders)
-  lazy val constructor: Constructor[A] = BestAvailableConstructor(clazz)
+
+  lazy val constructor = SalatConstructor.forClass(clazz, companionClass, companionObject)
+  //  {
+  //    val c = companionClass.getMethods.find(m => m.getAnnotation(classOf[SalatFactory]) != null) match {
+  //      case Some(method) => new ConstructorOrFactory[A](method, companionObject)
+  //      case _            => new ConstructorOrFactory[A](BestAvailableConstructor(clazz))
+  //    }
+  //
+  //    c
+  //  }
 
   lazy val interestingInterfaces: List[(Class[_], SymbolInfoSymbol)] = {
     val interfaces = clazz.getInterfaces // this should return an empty array, but...  sometimes returns null!

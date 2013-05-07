@@ -1,4 +1,6 @@
 /*
+ * Forked from:
+ *
  * Copyright (c) 2010 - 2012 Novus Partners, Inc. (http://www.novus.com)
  *
  * Module:        salat-core
@@ -26,10 +28,9 @@ package com.novus.salat.util
 
 import com.novus.salat._
 import scala.tools.scalap.scalax.rules.scalasig.SymbolInfoSymbol
-import java.lang.reflect.Constructor
 import com.mongodb.casbah.commons.TypeImports._
 
-case class ToObjectGlitch[X <: AnyRef with Product](grater: ConcreteGrater[X], sym: SymbolInfoSymbol, constructor: Constructor[X], args: Seq[AnyRef], cause: Throwable) extends Error(
+case class ToObjectGlitch[X <: AnyRef with Product](grater: ConcreteGrater[X], sym: SymbolInfoSymbol, constructor: SalatConstructor[X], args: Seq[AnyRef], cause: Throwable) extends Error(
   """
 
   %s
